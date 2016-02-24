@@ -59,7 +59,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.setIconDefaultImagePath = exports.ZoomControl = exports.WMSTileLayer = exports.TileLayer = exports.ScaleControl = exports.Rectangle = exports.Popup = exports.Polyline = exports.Polygon = exports.Path = exports.MultiPolyline = exports.MultiPolygon = exports.Marker = exports.MapLayer = exports.MapControl = exports.MapComponent = exports.Map = exports.LayersControl = exports.LayerGroup = exports.ImageOverlay = exports.GeoJson = exports.FeatureGroup = exports.CircleMarker = exports.Circle = exports.CanvasTileLayer = exports.BaseTileLayer = exports.AttributionControl = exports.PropTypes = undefined;
+	exports.setIconDefaultImagePath = exports.DrawControl = exports.ZoomControl = exports.WMSTileLayer = exports.TileLayer = exports.ScaleControl = exports.Rectangle = exports.Popup = exports.Polyline = exports.Polygon = exports.Path = exports.MultiPolyline = exports.MultiPolygon = exports.Marker = exports.MapLayer = exports.MapControl = exports.MapComponent = exports.Map = exports.LayersControl = exports.LayerGroup = exports.ImageOverlay = exports.GeoJson = exports.FeatureGroup = exports.CircleMarker = exports.Circle = exports.CanvasTileLayer = exports.BaseTileLayer = exports.AttributionControl = exports.PropTypes = undefined;
 
 	var _leaflet = __webpack_require__(1);
 
@@ -173,6 +173,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _ZoomControl3 = _interopRequireDefault(_ZoomControl2);
 
+	var _DrawControl2 = __webpack_require__(173);
+
+	var _DrawControl3 = _interopRequireDefault(_DrawControl2);
+
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -204,6 +208,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.TileLayer = _TileLayer3.default;
 	exports.WMSTileLayer = _WMSTileLayer3.default;
 	exports.ZoomControl = _ZoomControl3.default;
+	exports.DrawControl = _DrawControl3.default;
 	var setIconDefaultImagePath = exports.setIconDefaultImagePath = function setIconDefaultImagePath(path) {
 	  _leaflet2.default.Icon.Default.imagePath = path;
 	};
@@ -1744,6 +1749,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	var EVENTS_RE = /on(?:Leaflet)?(.+)/i;
+	var EVENTS_DRAW_RE = /on(?:Leaflet)?Draw(.+)/i;
 
 	var MapComponent = function (_Component) {
 	  _inherits(MapComponent, _Component);
@@ -1794,6 +1800,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return p.toLowerCase();
 	          });
 	          res[key] = props[ev];
+	        }
+	        if (EVENTS_DRAW_RE.test(ev)) {
+	          var key = ev.replace(EVENTS_DRAW_RE, function (match, p) {
+	            return p.toLowerCase();
+	          });
+	          res['draw:' + key] = props[ev];
 	        }
 	        return res;
 	      }, {});
@@ -7116,6 +7128,62 @@ return /******/ (function(modules) { // webpackBootstrap
 	  zoomOutTitle: _react.PropTypes.string
 	};
 	exports.default = ZoomControl;
+
+/***/ },
+/* 173 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(4);
+
+	var _leaflet = __webpack_require__(1);
+
+	var _MapControl2 = __webpack_require__(9);
+
+	var _MapControl3 = _interopRequireDefault(_MapControl2);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var DrawControl = function (_MapControl) {
+	  _inherits(DrawControl, _MapControl);
+
+	  function DrawControl() {
+	    _classCallCheck(this, DrawControl);
+
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(DrawControl).apply(this, arguments));
+	  }
+
+	  _createClass(DrawControl, [{
+	    key: 'componentWillMount',
+	    value: function componentWillMount() {
+	      this.leafletElement = _leaflet.control.zoom(this.props);
+	    }
+	  }]);
+
+	  return DrawControl;
+	}(_MapControl3.default);
+
+	DrawControl.propTypes = {
+	  polygon: _react.PropTypes.string,
+	  polyline: _react.PropTypes.string,
+	  circle: _react.PropTypes.string,
+	  rectangle: _react.PropTypes.string,
+	  marker: _react.PropTypes.string
+	};
+	exports.default = DrawControl;
 
 /***/ }
 /******/ ])

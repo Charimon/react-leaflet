@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
-import { Map, TileLayer, ZoomControl } from '../../src';
+import { Map, TileLayer, DrawControl } from '../../src';
 
-export default class ZoomControlExample extends Component {
+export default class DrawControlExample extends Component {
   render() {
     return (
-      <Map center={[51.505, -0.09]} zoom={13} zoomControl={false}>
+      <Map center={[51.505, -0.09]} zoom={13}>
         <TileLayer
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
         />
-        <ZoomControl position='bottomright' />
+        <DrawControl position='topright' />
       </Map>
     );
   }

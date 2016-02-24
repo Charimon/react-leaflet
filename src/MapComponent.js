@@ -5,6 +5,7 @@ import reduce from 'lodash/reduce';
 import { Component } from 'react';
 
 const EVENTS_RE = /on(?:Leaflet)?(.+)/i;
+const EVENTS_DRAW_RE = /on(?:Leaflet)?Draw(.+)/i;
 
 export default class MapComponent extends Component {
   componentWillMount() {
@@ -38,6 +39,10 @@ export default class MapComponent extends Component {
       if (EVENTS_RE.test(ev)) {
         const key = ev.replace(EVENTS_RE, (match, p) => p.toLowerCase());
         res[ key ] = props[ ev ];
+      }
+      if (EVENTS_DRAW_RE.test(ev)) {
+        const key = ev.replace(EVENTS_DRAW_RE, (match, p) => p.toLowerCase());
+        res[ 'draw:'+key ] = props[ ev ];
       }
       return res;
     }, {});
