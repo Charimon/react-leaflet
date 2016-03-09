@@ -27,6 +27,7 @@
     "react-component",
     "react",
     "leaflet",
+    "leaflet-draw",
     "map"
   ],
   "author": "Paul Le Cam <paul@ulem.net>",
@@ -41,6 +42,7 @@
   "peerDependencies": {
     "leaflet": "^0.7.0",
     "react": "^0.14.0",
+    "leaflet-draw": "^0.2.3",
     "react-dom": "^0.14.0"
   },
   "devDependencies": {
